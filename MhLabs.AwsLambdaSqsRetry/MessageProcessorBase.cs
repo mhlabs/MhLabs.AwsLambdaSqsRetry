@@ -29,7 +29,7 @@ namespace MhLabs.AwsLambdaSqsRetry
             {
                 QueueUrl = Environment.GetEnvironmentVariable("RetryQueueUrl"),
                 MaxNumberOfMessages = 10,
-                WaitTimeSeconds = 1
+                WaitTimeSeconds = 1 //TODO - probably shouldn't do long polling here
             };
             var hasMessages = false;
             do
