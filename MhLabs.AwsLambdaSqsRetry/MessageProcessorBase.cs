@@ -10,13 +10,13 @@ using Newtonsoft.Json;
 
 namespace MhLabs.AwsLambdaSqsRetry
 {
-    public abstract class MessageProcessor<TEventType, TRawData>
+    public abstract class MessageProcessorBase<TEventType, TRawData>
     {
         protected abstract Task HandleEvent(TRawData raw, ILambdaContext context);
 
         private readonly IAmazonSQS _sqsClient;
 
-        protected MessageProcessor()
+        protected MessageProcessorBase()
         {
             _sqsClient = new AmazonSQSClient(RegionEndpoint.GetBySystemName(Environment.GetEnvironmentVariable("AWS_DEFAULT_REGION")));
         }
@@ -28,31 +28,21 @@ namespace MhLabs.AwsLambdaSqsRetry
             var request = new ReceiveMessageRequest
             {
                 QueueUrl = Environment.GetEnvironmentVariable("RetryQueueUrl"),
-                MaxNumberOfMessages = 10,
-                WaitTimeSeconds = 1 //TODO - probably shouldn't do long polling here
+                MaxNumberOfMessages = 10
             };
-            var hasMessages = false;
+            bool hasMessages;
             do
             {
                 var queueResponse = await _sqsClient.ReceiveMessageAsync(request);
                 hasMessages = queueResponse.Messages.Any();
-                var deleteBatch = new List<DeleteMessageBatchRequestEntry>();
-                var count = 0;
                 foreach (var message in queueResponse.Messages)
                 {
                     Console.WriteLine(message.Body);
                     var obj = JsonConvert.DeserializeObject<TEventType>(message.Body);
                     await Process(obj, context);
-                    deleteBatch.Add(new DeleteMessageBatchRequestEntry(count++.ToString(), message.ReceiptHandle));
+                    await _sqsClient.DeleteMessageAsync(new DeleteMessageRequest(request.QueueUrl, message.ReceiptHandle));
                 }
-                if (deleteBatch.Any())
-                {
-                    await _sqsClient.DeleteMessageBatchAsync(new DeleteMessageBatchRequest
-                    {
-                        QueueUrl = request.QueueUrl,
-                        Entries = deleteBatch
-                    });
-                }
+               
             } while (hasMessages);
         }
 
