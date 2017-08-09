@@ -116,3 +116,6 @@ Example usage that consumes an SNS queue and handles failures using an SQS dead 
     "Outputs": {}
 }
 ```
+
+## Flow:
+![alt text](https://raw.githubusercontent.com/mhlabs/MhLabs.AwsLambdaSqsRetry/master/sns-sqs-flow.png "Data Flow")
