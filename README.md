@@ -1,8 +1,13 @@
 # MhLabs.AwsLambdaSqsRetry
 
-Abstract class providing two Lambda functions. One which can have any event source trigger and one that is typically triggered on a schedule.
+For cases where we want to have multiple subscribers to events and where Kinesis doesn't make sense due to the fixed shard configuration. For sporadic messages / infrequent message bursts, the procing model for SNS is much cheaper and it scales more flexibly. However, Contrary to Kinesis, SNS doesn't provide any retry logic apart from the 3 retries that's default to AWS Lambda. If the third Lambda invokation attemt falis, the message gets lost.
 
-Example usage that consumes an SNS queue and handles failures using an SQS dead letter queue:
+Ideally we'd want an SQS queue to subscribe to an SNS topic and trigger the Lambda function, but so far AWS hasn't provided support for SQS as a Lambda event source.
+
+This lets us consume from an SNS topic and solve the retry issue by specifying an SQS queue as Dead Letter Queue for the Lambda. Any failed Lambda events gets sent to the DLQ. The DLQ can be configured to have a delivery delay, so say we have a DynamoDB table with a low write capacity, but with an auto scaling policy enabled. If a burst of messages comes through, they will start getting rejected due to the sudden high write capacity. All these messages are put on the SQS DLQ with a 5 minute delivery delay.
+
+The SQS DQL is polled every minute by an additional Lambda, which effectively is invoking the same method as the SNS consumer. The five minute delay gives time for the auto scaling to kick in and once the write capacity has been increased the messages in the DLQ are likely to be accepted by DynamoDB. If they fail again, they will go back to SQS where they will be retried. The default retention time in SQS is 4 days.
+
 
 ## Lambda code:
 ```
