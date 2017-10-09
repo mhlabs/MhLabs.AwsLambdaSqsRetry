@@ -11,7 +11,7 @@ The SQS DQL is polled every minute by an additional Lambda, which effectively is
 
 ## Lambda code:
 ```
-  public class SnsProcessor : MessageProcessor<SNSEvent, List<Product>>
+  public class SnsProcessor : MessageProcessorBase<SNSEvent, List<Product>>
     {
         private readonly ProductRepository _repo;
 
