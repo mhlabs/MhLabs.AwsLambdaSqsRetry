@@ -16,9 +16,9 @@ namespace MhLabs.AwsLambdaSqsRetry
 
         private readonly IAmazonSQS _sqsClient;
 
-        protected MessageProcessorBase()
+        protected MessageProcessorBase(IAmazonSQS sqsClient = null)
         {
-            _sqsClient = new AmazonSQSClient(RegionEndpoint.GetBySystemName(Environment.GetEnvironmentVariable("AWS_DEFAULT_REGION")));
+            _sqsClient = sqsClient ?? new AmazonSQSClient(RegionEndpoint.GetBySystemName(Environment.GetEnvironmentVariable("AWS_DEFAULT_REGION")));
         }
 
         [LambdaSerializer(typeof(Amazon.Lambda.Serialization.Json.JsonSerializer))]
