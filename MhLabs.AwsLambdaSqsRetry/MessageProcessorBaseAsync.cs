@@ -47,13 +47,13 @@ namespace MhLabs.AwsLambdaSqsRetry
             } while (hasMessages);
         }
 
-        protected abstract TRawData ExtractEventBody(TEventType ev);
+        protected abstract Task<TRawData> ExtractEventBody(TEventType ev);
 
         [LambdaSerializer(typeof(Amazon.Lambda.Serialization.Json.JsonSerializer))]
         public async Task Process(TEventType ev, ILambdaContext context)
         {
             LambdaLogger.Log("Processing started");
-            var rawData = ExtractEventBody(ev);
+            var rawData = await ExtractEventBody(ev);
             await HandleEvent(rawData, context);
 
             LambdaLogger.Log("Processing complete.");
