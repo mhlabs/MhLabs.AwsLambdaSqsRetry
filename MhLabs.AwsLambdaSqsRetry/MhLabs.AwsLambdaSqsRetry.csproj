@@ -3,15 +3,14 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <Version>2.0.0</Version>
-
-	  <Company>Mathem</Company>
-	  <PackageIcon>packageIcon.png</PackageIcon>
-	  <PackageReadmeFile>README.md</PackageReadmeFile>
-	  <PackageLicenseFile>LICENSE</PackageLicenseFile>
-	  <IsPackable>true</IsPackable>
-	  <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-	  <PackageId>MhLabs.AwsLambdaSqsRetry</PackageId>
-	  <RepositoryUrl>https://github.com/mhlabs/MhLabs.AwsLambdaSqsRetry</RepositoryUrl>
+	<Company>Mathem</Company>
+	<PackageIcon>packageIcon.png</PackageIcon>
+	<PackageReadmeFile>README.md</PackageReadmeFile>
+	<PackageLicenseFile>LICENSE</PackageLicenseFile>
+	<IsPackable>true</IsPackable>
+	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	<PackageId>MhLabs.AwsLambdaSqsRetry</PackageId>
+	<RepositoryUrl>https://github.com/mhlabs/MhLabs.AwsLambdaSqsRetry</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
