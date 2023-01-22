@@ -6,7 +6,6 @@
 	<Company>Mathem</Company>
 	<PackageIcon>packageIcon.png</PackageIcon>
 	<PackageReadmeFile>README.md</PackageReadmeFile>
-	<PackageLicenseFile>LICENSE</PackageLicenseFile>
 	<IsPackable>true</IsPackable>
 	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 	<PackageId>MhLabs.AwsLambdaSqsRetry</PackageId>
